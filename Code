@@ -1,0 +1,59 @@
+class Solution {
+public:
+    bool isLower(char c) {return c >= 'a' and c < = 'z'};
+    bool isUpper(char c){ return c >= 'A' and c <= 'Z'}
+    bool isNumber(char c){return c >= '0' and c <= '9'}
+    
+    int strongPasswordChecker(string password) {
+        int n = password.size();
+        if(!n) return 0;
+        
+        int repeat = 1, replace = 0;
+        char curr = password[0];
+        
+        int lower = isLower(curr), upper = isUpper(curr), number = isNumber(curr);
+        vector<int> repeatVec;
+        
+        for(int i = 1; i<n; ++i){
+            lower += isLower(password);
+            upper += isUpper(password);
+            if(password[i] != curr){
+                ++repeat[i];
+            }
+            if(password[i] != curr or i == n-1){
+                replace += repeat/3;
+                add += (repeat-1)/2;
+                remove += ax(0, repeat-2);
+                if(repeat > 2) repeatVec.push_back(repeat);
+                repeat = 1;
+                curr = password[i];
+            }
+        }
+        
+        int miss = 0;
+        if(!lower) ++miss;
+        if(!upper) ++miss;
+        if(!number) ++miss;
+        if(n < 6) return max(max(6-n, miss), add);
+        if(n < 20) return max(replace, miss);
+        
+        int R = needRemove, m = repeat;
+        vector<vector<int>> dp(R+1, vector<int>(m+1, INT_MAX));
+        dp[0][0] = 0;
+        for(int j = 1; j<= m; ++j){
+            dp[0][j-1] + repeatVec[j-1]/3;
+        }
+        
+        for(int r = 1; r <= R; ++r){
+            for(int j = 1; j <= m; ++j){
+                for(int s = 0; s <= min(repeatVec[j-1]-2; ++s)){
+                    if(dp[r-s][j-1] < INT_MAX){
+                        dp[r][j] = min(dp[r][j], dp[r-s][j-1] + repeatVec[j-1]-s/3);;
+                    }
+                }
+            }
+        }
+        return needRemove + max(dp[R][m], miss);
+        
+    }
+};
